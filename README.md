@@ -25,7 +25,7 @@ $ npm install mavon-editor --save
 
 ### Use (如何引入)
 
-`index.js`:
+`index-d.js`:
 ```javascript
     // 全局注册
     // import with ES6

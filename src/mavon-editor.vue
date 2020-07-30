@@ -41,16 +41,16 @@
                  v-show="s_preview_switch || s_html_code" class="v-note-show">
                 <div ref="vShowContent" v-show="!s_html_code" v-if="s_preview_vue"
                      :class="{'scroll-style': s_scrollStyle, 'scroll-style-border-radius': s_scrollStyle}"
-                     class="v-show-content"
+                     class="v-show-content "
                      :style="{'background-color': previewBackground}">
-                    <component :is="{template: `<div>${d_render}</div>`}">
+                    <component :is="{template: `<div class='markdown-body'>${d_render}</div>`}">
                     </component>
                 </div>
 
 
                 <div ref="vShowContent" v-html="d_render" v-show="!s_html_code" v-if="!s_preview_vue"
                      :class="{'scroll-style': s_scrollStyle, 'scroll-style-border-radius': s_scrollStyle}"
-                     class="v-show-content"
+                     class="v-show-content markdown-body"
                      :style="{'background-color': previewBackground}">
                 </div>
 
@@ -134,6 +134,7 @@ import markdown from './lib/mixins/markdown.js'
 import md_toolbar_left from './components/md-toolbar-left.vue'
 import md_toolbar_right from './components/md-toolbar-right.vue'
 import "./lib/font/css/fontello.css"
+import "./lib/css/markdown.css"
 import './lib/css/md.css'
 
 const xss = require('xss');
@@ -299,9 +300,10 @@ export default {
             d_image_file: [],
             d_preview_imgsrc: null, // 图片预览地址
             s_external_link: {
-                markdown_css: function () {
-                    return 'https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/2.9.0/github-markdown.min.css';
-                },
+                // markdown_css: function () {
+                //     // return "/lib/css/markdown.css";
+                //     return 'https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/2.9.0/github-markdown.min.css';
+                // },
                 hljs_js: function () {
                     return 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js';
                 },

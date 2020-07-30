@@ -1,7 +1,7 @@
 ### Use (如何引入)
 
 #### 方法1
-`index.js`:
+`index-d.js`:
 ```javascript
     // 全局注册
     // import with ES6
@@ -26,7 +26,7 @@
 ```
 
 #### 方法2
-`index.js`:
+`index-d.js`:
 ```javascript
     // 全局注册
     // require with Webpack/Node.js
@@ -64,7 +64,7 @@
     }
     </style>
 ```
-`index.js`:
+`index-d.js`:
 ```javascript
 	// 下同
     import Vue from 'vue';

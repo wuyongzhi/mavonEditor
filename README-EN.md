@@ -23,7 +23,7 @@ $ npm install mavon-editor --save
 
 ### Use
 
-`index.js`:
+`index-d.js`:
 ```javascript
     // Global Registration
     // import with ES6

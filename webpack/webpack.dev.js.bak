@@ -23,7 +23,7 @@ const extractCSS = new ExtractTextPlugin('css/[name].[contenthash:8].css');
 
 module.exports = {
     entry: {
-        index: './src/dev/index.js',
+        index: './src/dev/index-d.js',
         vue: ['vue']
     },
     output: {

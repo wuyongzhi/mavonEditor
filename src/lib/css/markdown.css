@@ -277,6 +277,7 @@
     font-size: 36px;
     font-weight: 600;
 }
+
 .markdown-body h2 {
     font-size: 28px;
     font-weight: 600;
@@ -311,6 +312,14 @@
     margin: 0;
 }
 
+.markdown-body ul {
+    list-style-type: circle;
+}
+
+.markdown-body ol {
+    list-style-type: decimal;
+}
+
 .markdown-body ul,
 .markdown-body ol {
     padding-left: 0;
@@ -322,6 +331,7 @@
 .markdown-body ul ol {
     list-style-type: lower-roman;
 }
+
 .markdown-body ul ul ol,
 .markdown-body ul ol ol,
 .markdown-body ol ul ol,

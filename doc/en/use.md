@@ -1,7 +1,7 @@
 ### Use
 
 #### method 1
-`index.js`:
+`index-d.js`:
 ```javascript
     // Global Registration
     // import with ES6
@@ -27,7 +27,7 @@
 ```
 
 #### method 2
-`index.js`:
+`index-d.js`:
 ```javascript
     // Global Registration
     // require with Webpack/Node.js
@@ -66,7 +66,7 @@
     }
     </style>
 ```
-`index.js`:
+`index-d.js`:
 ```javascript
 	// The same below
     import Vue from 'vue';
