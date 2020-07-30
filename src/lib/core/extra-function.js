@@ -415,12 +415,12 @@ export function loadLink(src, callback) {
 
 export const ImagePreviewListener = ($vm) => {
     // vShowContent
-    const previewEl = $vm.$refs.vShowContent.$el || $vm.$refs.vShowContent;
-
+    const previewEl =   $vm.$refs.vShowContent;
+    console.log(previewEl)
     previewEl.addEventListener('click', function (event) {
         event = event ? event : window.event;
         let ele = event.srcElement ? event.srcElement : event.target;
-        if (ele.tagName === 'IMG') {
+        if (ele.tagName.toLowerCase() === 'img') {
             if ($vm.imageClick != null) {
                 // 覆盖图片点击事件
                 $vm.imageClick(ele);

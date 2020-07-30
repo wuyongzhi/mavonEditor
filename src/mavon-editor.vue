@@ -1,13 +1,15 @@
 <template>
-    <div :class="[{ 'fullscreen': s_fullScreen, 'shadow': boxShadow }]" class="v-note-wrapper markdown-body" :style="{'box-shadow': boxShadow ? boxShadowStyle : ''}">
+    <div :class="[{ 'fullscreen': s_fullScreen, 'shadow': boxShadow }]" class="v-note-wrapper markdown-body"
+         :style="{'box-shadow': boxShadow ? boxShadowStyle : ''}">
         <!--工具栏-->
         <div class="v-note-op" v-show="toolbarsFlag" :style="{'background': toolbarsBackground}">
             <v-md-toolbar-left ref="toolbar_left" :editable="editable" :transition="transition" :d_words="d_words"
-                               @toolbar_left_click="toolbar_left_click" @toolbar_left_addlink="toolbar_left_addlink" :toolbars="toolbars"
+                               @toolbar_left_click="toolbar_left_click" @toolbar_left_addlink="toolbar_left_addlink"
+                               :toolbars="toolbars"
                                @imgAdd="$imgAdd" @imgDel="$imgDel" @imgTouch="$imgTouch" :image_filter="imageFilter"
                                :class="{'transition': transition}">
-                <slot name="left-toolbar-before" slot="left-toolbar-before" />
-                <slot name="left-toolbar-after" slot="left-toolbar-after" />
+                <slot name="left-toolbar-before" slot="left-toolbar-before"/>
+                <slot name="left-toolbar-after" slot="left-toolbar-after"/>
             </v-md-toolbar-left>
             <v-md-toolbar-right ref="toolbar_right" :d_words="d_words" @toolbar_right_click="toolbar_right_click"
                                 :toolbars="toolbars"
@@ -16,8 +18,8 @@
                                 :s_html_code="s_html_code"
                                 :s_navigation="s_navigation"
                                 :class="{'transition': transition}">
-                <slot name="right-toolbar-before" slot="right-toolbar-before" />
-                <slot name="right-toolbar-after" slot="right-toolbar-after" />
+                <slot name="right-toolbar-before" slot="right-toolbar-before"/>
+                <slot name="right-toolbar-after" slot="right-toolbar-after"/>
             </v-md-toolbar-right>
         </div>
         <!--编辑展示区域-->
@@ -37,10 +39,14 @@
             <!--展示区-->
             <div :class="{'single-show': (!s_subfield && s_preview_switch) || (!s_subfield && s_html_code)}"
                  v-show="s_preview_switch || s_html_code" class="v-note-show">
+                <div ref="vShowContent" v-show="!s_html_code" v-if="s_preview_vue"
+                     :class="{'scroll-style': s_scrollStyle, 'scroll-style-border-radius': s_scrollStyle}"
+                     class="v-show-content"
+                     :style="{'background-color': previewBackground}">
+                    <component :is="{template: `<div>${d_render}</div>`}">
+                    </component>
+                </div>
 
-
-                <component ref="vShowContent" :is="{template:renderWithVue}">
-                </component>
 
                 <div ref="vShowContent" v-html="d_render" v-show="!s_html_code" v-if="!s_preview_vue"
                      :class="{'scroll-style': s_scrollStyle, 'scroll-style-border-radius': s_scrollStyle}"
@@ -48,9 +54,11 @@
                      :style="{'background-color': previewBackground}">
                 </div>
 
-                <div v-show="s_html_code" :class="{'scroll-style': s_scrollStyle, 'scroll-style-border-radius': s_scrollStyle}" class="v-show-content-html"
-                  :style="{'background-color': previewBackground}">
-                    {{d_render}}
+                <div v-show="s_html_code"
+                     :class="{'scroll-style': s_scrollStyle, 'scroll-style-border-radius': s_scrollStyle}"
+                     class="v-show-content-html"
+                     :style="{'background-color': previewBackground}">
+                    {{ d_render }}
                 </div>
             </div>
 
@@ -58,11 +66,12 @@
             <transition name="slideTop">
                 <div v-show="s_navigation" class="v-note-navigation-wrapper" :class="{'transition': transition}">
                     <div class="v-note-navigation-title">
-                        {{d_words.navigation_title}}<i @click="toolbar_right_click('navigation')"
-                                                       class="fa fa-mavon-times v-note-navigation-close"
-                                                       aria-hidden="true"></i>
+                        {{ d_words.navigation_title }}<i @click="toolbar_right_click('navigation')"
+                                                         class="fa fa-mavon-times v-note-navigation-close"
+                                                         aria-hidden="true"></i>
                     </div>
-                    <div ref="navigationContent" class="v-note-navigation-content" :class="{'scroll-style': s_scrollStyle}">
+                    <div ref="navigationContent" class="v-note-navigation-content"
+                         :class="{'scroll-style': s_scrollStyle}">
                     </div>
                 </div>
             </transition>
@@ -82,8 +91,10 @@
         </transition>
         <!-- 预览图片 -->
         <transition name="fade">
-            <div @click="d_preview_imgsrc=null" class="v-note-img-wrapper" v-if="d_preview_imgsrc">
-                <img :src="d_preview_imgsrc" alt="none">
+            <div ref="imgPreview">
+                <div @click="d_preview_imgsrc=null" class="v-note-img-wrapper" v-if="d_preview_imgsrc">
+                    <img :src="d_preview_imgsrc" alt="none">
+                </div>
             </div>
         </transition>
         <!--阅读模式-->
@@ -99,35 +110,33 @@
 import {autoTextarea} from 'auto-textarea'
 import {keydownListen} from './lib/core/keydown-listen.js'
 import hljsCss from './lib/core/hljs/lang.hljs.css.js'
-import hljsLangs from './lib/core/hljs/lang.hljs.js'
-const xss = require('xss');
 import {
     fullscreenchange,
-   /* windowResize, */
-    scrollLink,
-    insertTextAtCaret,
     getNavigation,
-    insertTab,
-    unInsertTab,
-    insertOl,
-    insertUl,
+    ImagePreviewListener,
     insertEnter,
-    removeLine,
+    insertOl,
+    insertTab,
+    insertTextAtCaret,
+    insertUl,
     loadLink,
     loadScript,
-    ImagePreviewListener
+    removeLine,
+    scrollLink,
+    unInsertTab
 } from './lib/core/extra-function.js'
-import {p_ObjectCopy_DEEP, stopEvent} from './lib/util.js'
-import {toolbar_left_click, toolbar_left_addlink} from './lib/toolbar_left_click.js'
+import {stopEvent} from './lib/util.js'
+import {toolbar_left_addlink, toolbar_left_click} from './lib/toolbar_left_click.js'
 import {toolbar_right_click} from './lib/toolbar_right_click.js'
 import {CONFIG} from './lib/config.js'
-import hljs from './lib/core/highlight.js'
 import markdown from './lib/mixins/markdown.js'
 
 import md_toolbar_left from './components/md-toolbar-left.vue'
 import md_toolbar_right from './components/md-toolbar-right.vue'
 import "./lib/font/css/fontello.css"
 import './lib/css/md.css'
+
+const xss = require('xss');
 export default {
     mixins: [markdown],
     props: {
@@ -241,7 +250,7 @@ export default {
             type: Number,
             default: 0
         },
-        shortCut:{
+        shortCut: {
             type: Boolean,
             default: true
         }
@@ -273,6 +282,7 @@ export default {
             })(), // props true 展示编辑 false展示预览
             s_fullScreen: false,// 全屏编辑标志
             s_help: false,// markdown帮助
+            s_preview_vue: true,
             s_html_code: false,// 分栏情况下查看html
             d_help: null,
             d_words: null,
@@ -289,25 +299,25 @@ export default {
             d_image_file: [],
             d_preview_imgsrc: null, // 图片预览地址
             s_external_link: {
-                markdown_css: function() {
+                markdown_css: function () {
                     return 'https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/2.9.0/github-markdown.min.css';
                 },
-                hljs_js: function() {
+                hljs_js: function () {
                     return 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js';
                 },
-                hljs_lang: function(lang) {
+                hljs_lang: function (lang) {
                     return 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/' + lang + '.min.js';
                 },
-                hljs_css: function(css) {
+                hljs_css: function (css) {
                     if (hljsCss[css]) {
                         return 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/' + css + '.min.css';
                     }
                     return '';
                 },
-                katex_js: function() {
+                katex_js: function () {
                     return 'https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.8.3/katex.min.js';
                 },
-                katex_css: function() {
+                katex_css: function () {
                     return 'https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.8.3/katex.min.css';
                 }
             },
@@ -346,7 +356,7 @@ export default {
             $vm.$drag(e);
         })
         // 浏览器siz大小
-       /* windowResize(this); */
+        /* windowResize(this); */
         keydownListen(this);
         // 图片预览事件监听
         ImagePreviewListener(this);
@@ -359,12 +369,16 @@ export default {
         this.d_value = this.value;
         // 将help添加到末尾
         document.body.appendChild(this.$refs.help);
+
+        // 将 imgPreview 添加到Body
+        document.body.appendChild(this.$refs.imgPreview);
+
         this.loadExternalLink('markdown_css', 'css');
         this.loadExternalLink('katex_css', 'css')
-        this.loadExternalLink('katex_js', 'js', function() {
+        this.loadExternalLink('katex_js', 'js', function () {
             $vm.iRender(true);
         })
-        this.loadExternalLink('hljs_js', 'js', function() {
+        this.loadExternalLink('hljs_js', 'js', function () {
             $vm.iRender(true);
         })
 
@@ -375,6 +389,7 @@ export default {
     },
     beforeDestroy() {
         document.body.removeChild(this.$refs.help);
+        document.body.removeChild(this.$refs.imgPreview);
     },
     getMarkdownIt() {
         return this.mixins[0].data().markdownIt
@@ -382,7 +397,7 @@ export default {
     methods: {
         loadExternalLink(name, type, callback) {
             if (typeof this.p_external_link[name] !== 'function') {
-                if (this.p_external_link[name] != false) {
+                if (this.p_external_link[name] !== false) {
                     console.error('external_link.' + name, 'is not a function, if you want to disabled this error log, set external_link.' + name, 'to function or false');
                 }
                 return;
@@ -627,7 +642,7 @@ export default {
         initLanguage() {
             let lang = CONFIG.langList.indexOf(this.language) >= 0 ? this.language : 'zh-CN';
             var $vm = this;
-            $vm.$render(CONFIG[`help_${lang}`], function(res) {
+            $vm.$render(CONFIG[`help_${lang}`], function (res) {
                 $vm.d_help = res;
             })
             this.d_words = CONFIG[`words_${lang}`];
@@ -644,8 +659,9 @@ export default {
         codeStyleChange(val, isInit) {
             isInit = isInit ? isInit : false;
             if (typeof this.p_external_link.hljs_css !== 'function') {
-                if (this.p_external_link.hljs_css != false)
-                { console.error('external_link.hljs_css is not a function, if you want to disabled this error log, set external_link.hljs_css to function or false'); }
+                if (this.p_external_link.hljs_css != false) {
+                    console.error('external_link.hljs_css is not a function, if you want to disabled this error log, set external_link.hljs_css to function or false');
+                }
                 return;
             }
             var url = this.p_external_link.hljs_css(val);
@@ -661,12 +677,11 @@ export default {
         },
         iRender(toggleChange) {
             var $vm = this;
-            this.$render($vm.d_value, function(res) {
+            this.$render($vm.d_value, function (res) {
                 // render
                 $vm.d_render = res;
                 // change回调  toggleChange == false 时候触发change回调
-                if (!toggleChange)
-                {
+                if (!toggleChange) {
                     if ($vm.change) $vm.change($vm.d_value, $vm.d_render);
                 }
                 // 改变标题导航
@@ -740,11 +755,11 @@ export default {
 };
 </script>
 <style lang="stylus" rel="stylesheet/stylus">
-    @import "lib/css/scroll.styl"
-    @import "lib/css/mavon-editor.styl"
+@import "lib/css/scroll.styl"
+@import "lib/css/mavon-editor.styl"
 </style>
 <style lang="css" scoped>
-    .auto-textarea-wrapper {
-        height: 100%;
-    }
+.auto-textarea-wrapper {
+    height: 100%;
+}
 </style>
