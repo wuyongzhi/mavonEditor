@@ -141,6 +141,22 @@ const xss = require('xss');
 export default {
     mixins: [markdown],
     props: {
+        uploadMode: {
+            type: String,
+            default: "normal"
+        },
+        uploadAction: {
+            type: String,
+            default: ""
+        },
+        uploadHeaders: {
+            type: Object,
+            default: {}
+        },
+        onUploadCompleted: {
+            type: Function
+        },
+
         scrollStyle: {  // 是否渲染滚动条样式(webkit)
             type: Boolean,
             default: true
@@ -283,7 +299,7 @@ export default {
             })(), // props true 展示编辑 false展示预览
             s_fullScreen: false,// 全屏编辑标志
             s_help: false,// markdown帮助
-            s_preview_vue: true,
+            s_preview_vue: true, // 是否使用 vue component in markdown
             s_html_code: false,// 分栏情况下查看html
             d_help: null,
             d_words: null,
@@ -325,9 +341,10 @@ export default {
             },
             p_external_link: {},
             textarea_selectionEnd: 0,
-            textarea_selectionEnds: [0],
+            textarea_selectionEnds: [0]
         };
     },
+
     computed: {
         renderWithVue() {
             return `<div ref="vShowContent"
