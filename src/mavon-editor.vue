@@ -141,22 +141,6 @@ const xss = require('xss');
 export default {
     mixins: [markdown],
     props: {
-        uploadMode: {
-            type: String,
-            default: "normal"
-        },
-        uploadAction: {
-            type: String,
-            default: ""
-        },
-        uploadHeaders: {
-            type: Object,
-            default: {}
-        },
-        onUploadCompleted: {
-            type: Function
-        },
-
         scrollStyle: {  // 是否渲染滚动条样式(webkit)
             type: Boolean,
             default: true
@@ -522,7 +506,7 @@ export default {
             }
             if ($file) {
                 var oFile = $file;
-                if (this.__rFilter.test(oFile.type)) {
+                if (this.__rFilter.test(oFile.type)) { // 只处理图片类型
                     this.__oFReader.readAsDataURL(oFile);
                 }
             }
@@ -760,7 +744,8 @@ export default {
             if (!default_open_) {
                 default_open_ = this.subfield ? 'preview' : 'edit';
             }
-            return this.s_preview_switch = default_open_ === 'preview' ? true : false;
+            this.s_preview_switch = default_open_ === 'preview' ? true : false;
+            return this.s_preview_switch
         },
         codeStyle: function (val) {
             this.codeStyleChange(val)
