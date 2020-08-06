@@ -500,7 +500,11 @@ export default {
                             str: ''
                         });
                     $vm.$nextTick(function () {
-                        $vm.$emit('imgAdd', pos, $file);
+                        if ($vm.uploadAction !== undefined && $vm.uploadAction.length > 0) {
+
+                        } else {
+                            $vm.$emit('imgAdd', pos, $file);
+                        }
                     })
                 }
             }
