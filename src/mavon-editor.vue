@@ -304,6 +304,7 @@ export default {
                 //     // return "/lib/css/markdown.css";
                 //     return 'https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/2.9.0/github-markdown.min.css';
                 // },
+                markdown_css: false,
                 hljs_js: function () {
                     return 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js';
                 },
