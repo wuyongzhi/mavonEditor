@@ -379,12 +379,12 @@ export default {
 
         this.loadExternalLink('markdown_css', 'css');
         this.loadExternalLink('katex_css', 'css')
-        this.loadExternalLink('katex_js', 'js', function () {
-            $vm.iRender(true);
-        })
-        this.loadExternalLink('hljs_js', 'js', function () {
-            $vm.iRender(true);
-        })
+        // this.loadExternalLink('katex_js', 'js', function () {
+        //     $vm.iRender(true);
+        // })
+        // this.loadExternalLink('hljs_js', 'js', function () {
+        //     $vm.iRender(true);
+        // })
 
         if (!(typeof $vm.externalLink === 'object' && typeof $vm.externalLink['markdown_css'] === 'function')) {
             // 没有外部文件要来接管markdown样式，可以更改markdown样式。
