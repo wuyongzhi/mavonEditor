@@ -186,7 +186,7 @@ export const insertTab = ($vm, tab) => {
 // shift + tab
 export const unInsertTab = ($vm, tab) => {
     let regTab = new RegExp(tab ? `\\s{${tab}}` : '\t')
-    console.log(`regTab:`, regTab)
+    // console.log(`regTab:`, regTab)
     let obj = $vm.getTextareaDom();
     if (typeof obj.selectionStart === 'number' && typeof obj.selectionEnd === 'number') {
         var startPos = obj.selectionStart;
@@ -416,7 +416,6 @@ export function loadLink(src, callback) {
 export const ImagePreviewListener = ($vm) => {
     // vShowContent
     const previewEl =   $vm.$refs.vShowContent;
-    console.log(previewEl)
     previewEl.addEventListener('click', function (event) {
         event = event ? event : window.event;
         let ele = event.srcElement ? event.srcElement : event.target;
